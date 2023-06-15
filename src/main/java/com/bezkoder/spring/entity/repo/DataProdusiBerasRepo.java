@@ -23,7 +23,7 @@ public interface DataProdusiBerasRepo extends CrudRepository<DataProdusiBeras, L
     List<DataBeras> sumStokBeras();
 
     @Query(
-        value = "select count(dpb.is_terjual) as berasTerjual, dpb.jenis_beras_id as jenisBerasID, jb.nama as jenisBeras from data_produsi_beras dpb join jenis_beras jb on (dpb.jenis_beras_id = jb.id) where dpb.is_terjual = 1 GROUP BY dpb.jenis_beras_id ORDER BY berasTerjual desc",
+        value = "select count(dpb.is_terjual) as berasTerjual, dpb.jenis_beras_id as jenisBerasID, jb.nama as jenisBeras, sum(dpb.berat_beras) as totalBerat, EXTRACT(MONTH FROM dpb.tanggal_masuk) as bulan, EXTRACT(Year FROM dpb.tanggal_masuk) as tahun  from data_produsi_beras dpb join jenis_beras jb on (dpb.jenis_beras_id = jb.id) where dpb.is_terjual = 1 GROUP BY dpb.jenis_beras_id, bulan, tahun ORDER BY bulan asc, tahun asc",
         nativeQuery = true
         )
     List<DataPenjualanBeras> dataPenjualanBeras();

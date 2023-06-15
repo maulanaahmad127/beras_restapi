@@ -37,6 +37,7 @@ public class DataProdusiBeras {
 
     private float berat_beras;
 
+    @Column(columnDefinition="INTEGER DEFAULT 0")
     private Integer harga;
 
     @Column(columnDefinition="BOOLEAN DEFAULT false")

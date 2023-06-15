@@ -4,4 +4,7 @@ public interface DataPenjualanBeras {
     public Integer getBerasTerjual();
     public Long getJenisBerasID();
     public String getJenisBeras();
+    public Integer getTotalBerat();
+    public Integer getBulan();
+    public Integer getTahun();
 }

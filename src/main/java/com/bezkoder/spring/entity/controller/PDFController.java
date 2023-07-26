@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.bezkoder.spring.entity.model.DataBeras;
 import com.bezkoder.spring.entity.model.DataPenjualanBeras;
-import com.bezkoder.spring.entity.model.DataProdusiBeras;
-import com.bezkoder.spring.entity.repo.DataProdusiBerasRepo;
-import com.bezkoder.spring.entity.service.DataProdusiBerasService;
+import com.bezkoder.spring.entity.model.DataProduksiBeras;
+import com.bezkoder.spring.entity.repo.DataProduksiBerasRepo;
+import com.bezkoder.spring.entity.service.DataProduksiBerasService;
 import com.bezkoder.spring.entity.util.DataBerasPDFExporter;
 import com.bezkoder.spring.entity.util.DataPenjualanBerasPDFExporter;
 import com.bezkoder.spring.entity.util.UserPDFExporter;
@@ -28,13 +28,13 @@ import com.lowagie.text.DocumentException;
 public class PDFController {
 
     @Autowired
-    private DataProdusiBerasService service;
+    private DataProduksiBerasService service;
 
     @Autowired
-    private DataProdusiBerasRepo repo;
+    private DataProduksiBerasRepo repo;
     
     @GetMapping("/api/listBeras/export/pdf")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PK')")
     public void exportListBerasToPDF(HttpServletResponse response) throws DocumentException, IOException {
         response.setContentType("application/pdf");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
@@ -44,9 +44,9 @@ public class PDFController {
         String headerValue = "attachment; filename=users_" + currentDateTime + ".pdf";
         response.setHeader(headerKey, headerValue);
 
-        Iterable<DataProdusiBeras> listBerasIterable = service.findAll();
+        Iterable<DataProduksiBeras> listBerasIterable = service.findAll();
 
-        List<DataProdusiBeras> listBeras = new ArrayList<>();
+        List<DataProduksiBeras> listBeras = new ArrayList<>();
          
         listBerasIterable.forEach(listBeras::add);
 
@@ -58,7 +58,7 @@ public class PDFController {
     }
 
     @GetMapping("/api/listDataBeras/export/pdf")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PK')")
     public void exportlistDataBerasToPDF(HttpServletResponse response) throws DocumentException, IOException {
         response.setContentType("application/pdf");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
@@ -77,7 +77,7 @@ public class PDFController {
     }
 
     @GetMapping("/api/listDataPenjualanBeras/export/pdf")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PK')")
     public void exportlistDataPenjualanBerasToPDF(HttpServletResponse response) throws DocumentException, IOException {
         response.setContentType("application/pdf");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");

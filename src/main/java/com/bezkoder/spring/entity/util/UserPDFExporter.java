@@ -6,15 +6,15 @@ import java.util.List;
  
 import javax.servlet.http.HttpServletResponse;
 
-import com.bezkoder.spring.entity.model.DataProdusiBeras;
+import com.bezkoder.spring.entity.model.DataProduksiBeras;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.*;
  
  
 public class UserPDFExporter {
-    private List<DataProdusiBeras> listBeras;
+    private List<DataProduksiBeras> listBeras;
      
-    public UserPDFExporter(List<DataProdusiBeras> listBeras) {
+    public UserPDFExporter(List<DataProduksiBeras> listBeras) {
         this.listBeras = listBeras;
     }
  
@@ -47,7 +47,7 @@ public class UserPDFExporter {
     }
      
     private void writeTableData(PdfPTable table) {
-        for (DataProdusiBeras beras : listBeras) {
+        for (DataProduksiBeras beras : listBeras) {
             table.addCell(String.valueOf(beras.getId()));
             table.addCell(beras.getPetani().getNama());
             table.addCell(beras.getJenisBeras().getNama());

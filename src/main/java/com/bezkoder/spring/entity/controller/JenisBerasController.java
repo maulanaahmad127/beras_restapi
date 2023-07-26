@@ -63,7 +63,7 @@ public class JenisBerasController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('PETANI') or hasRole('ADMIN') or hasRole('PK')")
+    @PreAuthorize(" hasRole('ADMIN') or hasRole('PK')")
     public JenisBeras findOne(@PathVariable("id") Long id){
         return service.findOne(id);
     }

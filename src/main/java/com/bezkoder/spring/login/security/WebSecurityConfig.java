@@ -34,12 +34,6 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
   @Autowired
   private AuthEntryPointJwt unauthorizedHandler;
 
-  private static final String[] AUTH_WHITE_LIST = {
-    "/v3/api-docs/**",
-    "/swagger-ui/**",
-    "/v2/api-docs/**",
-    "/swagger-resources/**"
-};
 
   @Bean
   public AuthTokenFilter authenticationJwtTokenFilter() {
@@ -95,7 +89,6 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
         .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
         .authorizeRequests().antMatchers("/api/auth/**").permitAll()
-        .antMatchers(AUTH_WHITE_LIST).permitAll()
 
         
         .anyRequest().authenticated();

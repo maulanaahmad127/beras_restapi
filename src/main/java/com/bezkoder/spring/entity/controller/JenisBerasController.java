@@ -80,9 +80,9 @@ public class JenisBerasController {
 
 
 
-    @PutMapping
+    @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ResponseData<JenisBeras>> update( @Valid @RequestBody JenisBeras beras, Errors errors){
+    public ResponseEntity<ResponseData<JenisBeras>> update(@PathVariable("id") Long id, @Valid @RequestBody JenisBerasData berasData, Errors errors){
         ResponseData<JenisBeras> responseData = new ResponseData<>();
         if(errors.hasErrors()){
             for (ObjectError error : errors.getAllErrors()) {
@@ -92,6 +92,8 @@ public class JenisBerasController {
             responseData.setPayload(null);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
+        JenisBeras beras = service.findOne(id);
+        beras.setNama(berasData.getNama());
         responseData.setStatus(true);
         responseData.setPayload(service.save(beras));
         return ResponseEntity.ok(responseData);

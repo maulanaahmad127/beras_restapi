@@ -13,10 +13,10 @@ public class UserInfoResponse {
 
 	public UserInfoResponse(Long id, String username, String nama, String no_handphone, String jenis_kelamin, String email,  List<String> roles) {
 		this.id = id;
+		this.username = username;
 		this.nama = nama;
 		this.no_handphone = no_handphone;
 		this.jenis_kelamin = jenis_kelamin;
-		this.username = username;
 		this.email = email;
 		this.roles = roles;
 	}

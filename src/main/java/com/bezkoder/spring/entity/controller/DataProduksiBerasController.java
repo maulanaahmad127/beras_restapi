@@ -14,9 +14,11 @@ import com.bezkoder.spring.entity.model.DataBeras;
 import com.bezkoder.spring.entity.model.DataPenjualanBeras;
 import com.bezkoder.spring.entity.model.DataProduksiBeras;
 import com.bezkoder.spring.entity.model.JenisBeras;
+import com.bezkoder.spring.entity.model.PenjualanBeras;
 import com.bezkoder.spring.entity.repo.DataProduksiBerasRepo;
 import com.bezkoder.spring.entity.repo.JenisBerasRepo;
 import com.bezkoder.spring.entity.service.DataProduksiBerasService;
+import com.bezkoder.spring.entity.service.PenjualanBerasService;
 import com.bezkoder.spring.entity.util.GetUsernameToken;
 import com.bezkoder.spring.login.models.User;
 import com.bezkoder.spring.login.repository.UserRepository;
@@ -57,6 +59,9 @@ public class DataProduksiBerasController {
 
     @Autowired
     private GetUsernameToken getUsername;
+
+    @Autowired
+    private PenjualanBerasService penjualanService;
     
 
     @PostMapping
@@ -203,8 +208,34 @@ public class DataProduksiBerasController {
 
     @PutMapping("/changeIsTerjual/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public void updateStatusIsTerjual(@PathVariable("id") Long id){
-        service.updateStatusisTerjual(true, id);
+    public ResponseEntity<ResponseData<DataProduksiBeras>> updateStatusIsTerjual(@PathVariable("id") Long id){
+        ResponseData<DataProduksiBeras> responseData = new ResponseData<>();
+        DataProduksiBeras beras = service.findOne(id);
+
+        if(beras.isTerjual() == true) {
+            responseData.getMessage().add("beras sudah di set ke status terjual");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
+        beras.setTerjual(true);
+
+        
+        
+        PenjualanBeras penjualanBeras = new PenjualanBeras();
+        
+        penjualanBeras.setBeras(beras);
+        penjualanService.save(penjualanBeras);
+
+        beras.setPenjualanBeras(penjualanBeras);
+
+        service.save(beras);
+
+        responseData.setPayload(beras);
+        responseData.setStatus(true);
+
+        return ResponseEntity.ok(responseData);
     }
 
 }

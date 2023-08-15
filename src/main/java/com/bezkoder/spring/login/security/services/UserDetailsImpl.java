@@ -40,6 +40,7 @@ public class UserDetailsImpl implements UserDetails {
     this.username = username;
     this.nama = nama;
     this.no_handphone =no_handphone;
+    this.jenis_kelamin = jenis_kelamin;
     this.email = email;
     this.password = password;
     this.authorities = authorities;

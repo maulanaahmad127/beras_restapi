@@ -45,6 +45,9 @@ public class DataProduksiBeras {
     private boolean isTerjual;
 
     @ManyToOne
+    private PenjualanBeras penjualanBeras;
+
+    @ManyToOne
     private User petani;
 
     public DataProduksiBeras() {

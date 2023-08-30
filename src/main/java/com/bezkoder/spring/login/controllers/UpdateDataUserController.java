@@ -18,10 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bezkoder.spring.entity.dto.ChangeEmailData;
 import com.bezkoder.spring.entity.dto.ChangePasswordData;
+import com.bezkoder.spring.entity.dto.ChangeUsernameData;
 import com.bezkoder.spring.entity.dto.ResponseData;
 import com.bezkoder.spring.entity.util.GetUsernameToken;
 import com.bezkoder.spring.login.models.User;
-
+import com.bezkoder.spring.login.payload.response.MessageResponse;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import com.bezkoder.spring.login.repository.UserRepository;
@@ -68,7 +69,42 @@ public class UpdateDataUserController {
         
         String userString = getUsername.getUsernameStringFromToken();
         User user = userRepository.findByUsername(userString).get();
+        if(changeEmailData.getEmail().isEmpty()){
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is empty!"));
+        }
+        if (userRepository.existsByEmail(changeEmailData.getEmail())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
+          }
         user.setEmail(changeEmailData.getEmail());
+        
+        
+        responseData.setStatus(true);
+        responseData.setPayload(userRepository.save(user));
+        return ResponseEntity.ok(responseData);
+    }
+
+    @PatchMapping("/changeUsername")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PK') or hasRole('PETANI')")
+    public ResponseEntity<?> changeUsername(@RequestBody ChangeUsernameData changeUsernameData, Errors errors){
+        ResponseData<User> responseData = new ResponseData<>();
+        if(errors.hasErrors()){
+            for (ObjectError error : errors.getAllErrors()) {
+                responseData.getMessage().add(error.getDefaultMessage());
+            }
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+        
+        String userString = getUsername.getUsernameStringFromToken();
+        User user = userRepository.findByUsername(userString).get();
+        if(changeUsernameData.getUsername().isEmpty()){
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is empty!"));
+        }
+        if (userRepository.existsByUsername(changeUsernameData.getUsername())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+          }
+        user.setUsername(changeUsernameData.getUsername());
         
         
         responseData.setStatus(true);

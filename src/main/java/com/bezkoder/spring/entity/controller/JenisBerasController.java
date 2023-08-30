@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import com.bezkoder.spring.entity.dto.JenisBerasData;
 import com.bezkoder.spring.entity.dto.ResponseData;
 import com.bezkoder.spring.entity.model.JenisBeras;
+import com.bezkoder.spring.entity.repo.JenisBerasRepo;
 import com.bezkoder.spring.entity.service.JenisBerasService;
 import com.bezkoder.spring.entity.util.GetUsernameToken;
 import com.bezkoder.spring.login.models.User;
@@ -36,7 +37,8 @@ public class JenisBerasController {
     private JenisBerasService service;
     @Autowired
     private GetUsernameToken getUsername;
-
+    @Autowired
+    private JenisBerasRepo jenisBerasRepo;
     
 
     @PostMapping
@@ -51,7 +53,13 @@ public class JenisBerasController {
             responseData.setPayload(null);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
-        
+        if(jenisBerasData.getNama() == null){
+            responseData.getMessage().add("nama jenis beras is empty!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
         JenisBeras jenisBeras = new JenisBeras(
             jenisBerasData.getNama()
         );
@@ -64,8 +72,18 @@ public class JenisBerasController {
 
     @GetMapping("/{id}")
     @PreAuthorize(" hasRole('ADMIN') or hasRole('PK')")
-    public JenisBeras findOne(@PathVariable("id") Long id){
-        return service.findOne(id);
+    public ResponseEntity<ResponseData<JenisBeras>> findOne(@PathVariable("id") Long id){
+        ResponseData<JenisBeras> responseData = new ResponseData<>();
+
+        if(!jenisBerasRepo.existsById(id)){
+            responseData.getMessage().add("jenis beras is not found!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+        responseData.setPayload(service.findOne(id));
+        responseData.setStatus(true);
+        return ResponseEntity.ok(responseData);
     }
 
     @GetMapping
@@ -84,6 +102,12 @@ public class JenisBerasController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseData<JenisBeras>> update(@PathVariable("id") Long id, @Valid @RequestBody JenisBerasData berasData, Errors errors){
         ResponseData<JenisBeras> responseData = new ResponseData<>();
+        if(!jenisBerasRepo.existsById(id)){
+            responseData.getMessage().add("jenis beras is not found!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
         if(errors.hasErrors()){
             for (ObjectError error : errors.getAllErrors()) {
                 responseData.getMessage().add(error.getDefaultMessage());
@@ -101,8 +125,18 @@ public class JenisBerasController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public void delete(@PathVariable("id") Long id){
+    public ResponseEntity<ResponseData<JenisBeras>> delete(@PathVariable("id") Long id){
+        ResponseData<JenisBeras> responseData = new ResponseData<>();
+        if(!jenisBerasRepo.existsById(id)){
+            responseData.getMessage().add("jenis beras is not found!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
         service.removeOne(id);
+        responseData.setStatus(true);
+        responseData.getMessage().add("Data succesfully deleted!");
+        return ResponseEntity.ok(responseData);
     }
 
 }

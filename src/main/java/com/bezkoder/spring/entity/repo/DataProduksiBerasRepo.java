@@ -33,5 +33,7 @@ public interface DataProduksiBerasRepo extends CrudRepository<DataProduksiBeras,
    @Modifying
    @Query("update DataProduksiBeras dpb set dpb.isTerjual = :status where dpb.id = :id")
    void updateStatusIsTerjual (@Param("status") boolean status, @Param("id") long id);
+
+   boolean existsById(Long id);
 }
     

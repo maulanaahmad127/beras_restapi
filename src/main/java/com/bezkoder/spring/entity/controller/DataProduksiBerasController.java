@@ -24,6 +24,7 @@ import com.bezkoder.spring.login.models.User;
 import com.bezkoder.spring.login.repository.UserRepository;
 
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,13 +77,79 @@ public class DataProduksiBerasController {
             responseData.setPayload(null);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
+
+        Float beratFloat = berasData.getBerat_beras();
         
+        if(beratFloat == 0 || beratFloat == null){
+            responseData.getMessage().add("berat beras is empty!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
+        
+        if (berasData.getHarga() == null){
+            responseData.getMessage().add("harga beras is empty!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+        
+        if (berasData.getHarga() == 0){
+            responseData.getMessage().add("harga beras is empty!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
         DataProduksiBeras beras = new DataProduksiBeras(
             berasData.getBerat_beras(),
             berasData.getHarga()
         );
 
+        Long petaniLong = berasData.getPetani();
+
+        if(petaniLong == 0 || petaniLong == null){
+            responseData.getMessage().add("id petani is empty!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
+        if(!userRepository.existsById(petaniLong)){
+            responseData.getMessage().add("user is not exist!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
+        String role =  userRepository.findById(berasData.getPetani()).get().getRoles().iterator().next().toString();
+        
+        if(role != "ROLE_PETANI"){
+            responseData.getMessage().add("user is not petani!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
         User petani = userRepository.findById(berasData.getPetani()).get();
+
+        Long jenisBerasLong = berasData.getJenisBeras();
+
+        if(jenisBerasLong == 0 || jenisBerasLong == null){
+            responseData.getMessage().add("id jenis beras is empty!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
+        if(!jenisBerasRepo.existsById(jenisBerasLong)){
+            responseData.getMessage().add("jenis beras is not exist!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
         JenisBeras jb = jenisBerasRepo.findById(berasData.getJenisBeras()).get();
 
         beras.setPetani(petani);
@@ -94,9 +161,18 @@ public class DataProduksiBerasController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('PETANI') or hasRole('ADMIN') or hasRole('PK')")
-    public DataProduksiBeras findOne(@PathVariable("id") Long id){
-        
-        return service.findOne(id);
+    public ResponseEntity<ResponseData<DataProduksiBeras>> findOne(@PathVariable("id") Long id){
+        ResponseData<DataProduksiBeras> responseData = new ResponseData<>();
+
+        if(!repo.existsById(id)){
+            responseData.getMessage().add("data produksi beras is not found!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+        responseData.setPayload(service.findOne(id));
+        responseData.setStatus(true);
+        return ResponseEntity.ok(responseData);
     }
 
     @GetMapping
@@ -135,7 +211,16 @@ public class DataProduksiBerasController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseData<DataProduksiBeras>> update(@PathVariable("id") Long id, @Valid @RequestBody DataProduksiBerasData berasData, Errors errors){
+        
         ResponseData<DataProduksiBeras> responseData = new ResponseData<>();
+        
+        if(!repo.existsById(id)){
+            responseData.getMessage().add("data produksi beras is not found!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
         if(errors.hasErrors()){
             for (ObjectError error : errors.getAllErrors()) {
                 responseData.getMessage().add(error.getDefaultMessage());
@@ -146,10 +231,77 @@ public class DataProduksiBerasController {
         }
         
         DataProduksiBeras beras = service.findOne(id);
+
+        Float beratFloat = berasData.getBerat_beras();
+        
+        if(beratFloat == 0 || beratFloat == null){
+            responseData.getMessage().add("berat beras is empty!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
+        
+        if (berasData.getHarga() == null){
+            responseData.getMessage().add("harga beras is empty!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+        
+        if (berasData.getHarga() == 0){
+            responseData.getMessage().add("harga beras is empty!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+        
         beras.setBerat_beras(berasData.getBerat_beras());
         beras.setHarga(berasData.getHarga());
 
+        Long petaniLong = berasData.getPetani();
+
+        if(petaniLong == 0 || petaniLong == null){
+            responseData.getMessage().add("id petani is empty!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
+        if(!userRepository.existsById(petaniLong)){
+            responseData.getMessage().add("user is not exist!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
+        String role =  userRepository.findById(berasData.getPetani()).get().getRoles().iterator().next().toString();
+        
+        if(role != "ROLE_PETANI"){
+            responseData.getMessage().add("user is not petani!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
         User petani = userRepository.findById(berasData.getPetani()).get();
+
+        Long jenisBerasLong = berasData.getJenisBeras();
+
+        if(jenisBerasLong == 0 || jenisBerasLong == null){
+            responseData.getMessage().add("id jenis beras is empty!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
+        if(!jenisBerasRepo.existsById(jenisBerasLong)){
+            responseData.getMessage().add("jenis beras is not exist!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
         JenisBeras jb = jenisBerasRepo.findById(berasData.getJenisBeras()).get();
 
         beras.setPetani(petani);
@@ -202,14 +354,34 @@ public class DataProduksiBerasController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public void delete(@PathVariable("id") Long id){
+    public ResponseEntity<ResponseData<DataProduksiBeras>> delete(@PathVariable("id") Long id){
+        ResponseData<DataProduksiBeras> responseData = new ResponseData<>();
+        
+        if(!repo.existsById(id)){
+            responseData.getMessage().add("data produksi beras is not found!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
         service.removeOne(id);
+        responseData.setStatus(true);
+        responseData.getMessage().add("Data succesfully deleted!");
+        return ResponseEntity.ok(responseData);
+
     }
 
     @PutMapping("/changeIsTerjual/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseData<DataProduksiBeras>> updateStatusIsTerjual(@PathVariable("id") Long id){
         ResponseData<DataProduksiBeras> responseData = new ResponseData<>();
+        if(!repo.existsById(id)){
+            responseData.getMessage().add("data produksi beras is not found!");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
         DataProduksiBeras beras = service.findOne(id);
 
         if(beras.isTerjual() == true) {
@@ -238,5 +410,6 @@ public class DataProduksiBerasController {
         return ResponseEntity.ok(responseData);
     }
 
+    
 }
 

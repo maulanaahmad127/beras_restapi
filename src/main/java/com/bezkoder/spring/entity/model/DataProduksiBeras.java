@@ -2,6 +2,7 @@ package com.bezkoder.spring.entity.model;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -36,6 +37,7 @@ public class DataProduksiBeras {
     @ManyToOne
     private JenisBeras jenisBeras;
 
+    @NotNull
     private float berat_beras;
 
     @Column(columnDefinition="INTEGER DEFAULT 0")

@@ -100,12 +100,18 @@ public class AuthController {
     Set<String> strRoles = signUpRequest.getRole();
     Set<Role> roles = new HashSet<>();
 
-    if (strRoles == null) {
-      Role userRole = roleRepository.findByName(ERole.ROLE_PK)
-          .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-      roles.add(userRole);
-    } else {
+    System.out.println("size strRole = " + strRoles.size());
+    
+    strRoles.forEach(strRole -> {
+      System.out.println("role = " + strRole);
+      
+    });
+
+     
       strRoles.forEach(role -> {
+        if(role.isEmpty()){
+          throw new RuntimeException("Error: Role is empty.");
+        }
         switch (role) {
         case "pk":
           Role pkRole = roleRepository.findByName(ERole.ROLE_PK)
@@ -125,13 +131,11 @@ public class AuthController {
           roles.add(adminRole);
 
           break;
-        default:
-          Role userRole = roleRepository.findByName(ERole.ROLE_PK)
-              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-          roles.add(userRole);
+          default:
+          throw new RuntimeException("Error: Role is not found.");
         }
       });
-    }
+    
 
     user.setRoles(roles);
     userRepository.save(user);

@@ -18,6 +18,8 @@ public class DataProduksiBerasService {
     @Autowired
     private DataProduksiBerasRepo berasRepo;
 
+   
+
     public DataProduksiBeras save(DataProduksiBeras beras){
         return berasRepo.save(beras);
     }

@@ -10,12 +10,16 @@ import com.bezkoder.spring.login.models.User;
 
 import java.util.List;
 
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
+
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
-public interface DataProduksiBerasRepo extends CrudRepository<DataProduksiBeras, Long>  {
+public interface DataProduksiBerasRepo extends PagingAndSortingRepository<DataProduksiBeras, Long>  {
 
     @Query(
     value = "select sum(dpb.berat_beras) as stok, dpb.jenis_beras_id as jenisBerasID, jb.nama as jenisBeras from sppb_mdataproduksiberas dpb join sppb_mjenisberas jb on (dpb.jenis_beras_id = jb.id) where dpb.is_terjual = 0 GROUP BY dpb.jenis_beras_id"
@@ -35,5 +39,7 @@ public interface DataProduksiBerasRepo extends CrudRepository<DataProduksiBeras,
    void updateStatusIsTerjual (@Param("status") boolean status, @Param("id") long id);
 
    boolean existsById(Long id);
+
+   Page<DataProduksiBeras> findByJenisBerasNamaContains(String nama, Pageable pageable);
 }
     

@@ -10,6 +10,7 @@ import javax.validation.Valid;
 
 import com.bezkoder.spring.entity.dto.DataProduksiBerasData;
 import com.bezkoder.spring.entity.dto.ResponseData;
+import com.bezkoder.spring.entity.dto.SearchData;
 import com.bezkoder.spring.entity.model.DataBeras;
 import com.bezkoder.spring.entity.model.DataPenjualanBeras;
 import com.bezkoder.spring.entity.model.DataProduksiBeras;
@@ -26,12 +27,15 @@ import com.bezkoder.spring.login.repository.UserRepository;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -42,7 +46,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("api/beras")
 public class DataProduksiBerasController {
@@ -179,6 +183,15 @@ public class DataProduksiBerasController {
     @PreAuthorize("hasRole('ADMIN') or hasRole('PK')")
     public Iterable<DataProduksiBeras> findAll(){
         return service.findAll();
+    }
+
+    @PostMapping("/search/{size}/{page}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PK')")
+    public Iterable<DataProduksiBeras> findAllbyJenisBeras(@RequestBody SearchData searchData , @PathVariable("size") int size,
+    @PathVariable("page") int page
+    ){
+        Pageable pageable = PageRequest.of(page, size);
+        return service.findByJenisBerasName(searchData.getNama(), pageable);
     }
 
     @GetMapping("/petani")

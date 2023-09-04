@@ -9,6 +9,7 @@ import com.bezkoder.spring.entity.repo.DataProduksiBerasRepo;
 import com.bezkoder.spring.login.models.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -50,7 +51,9 @@ public class DataProduksiBerasService {
     }
 
     
-
+    public Iterable<DataProduksiBeras> findByJenisBerasName(String nama, Pageable pageable){
+        return berasRepo.findByJenisBerasNamaContains(nama, pageable);
+    }
 
 }
 

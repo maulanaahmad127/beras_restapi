@@ -46,7 +46,7 @@ public class DataProduksiBeras {
     @Column(columnDefinition="BOOLEAN DEFAULT false")
     private boolean isTerjual;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private PenjualanBeras penjualanBeras;
 
     @ManyToOne

@@ -6,6 +6,7 @@ import javax.transaction.Transactional;
 
 import com.bezkoder.spring.entity.model.DataProduksiBeras;
 import com.bezkoder.spring.entity.repo.DataProduksiBerasRepo;
+import com.bezkoder.spring.entity.util.DPBSpesification;
 import com.bezkoder.spring.login.models.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,7 @@ public class DataProduksiBerasService {
 
     
     public Iterable<DataProduksiBeras> findByJenisBerasName(String nama, Pageable pageable){
-        return berasRepo.findByJenisBerasNamaContains(nama, pageable);
+        return berasRepo.findAll(DPBSpesification.containsNested(nama), pageable);
     }
 
 }

@@ -20,6 +20,7 @@ import com.bezkoder.spring.entity.repo.DataProduksiBerasRepo;
 import com.bezkoder.spring.entity.repo.JenisBerasRepo;
 import com.bezkoder.spring.entity.service.DataProduksiBerasService;
 import com.bezkoder.spring.entity.service.PenjualanBerasService;
+import com.bezkoder.spring.entity.util.DPBSpesification;
 import com.bezkoder.spring.entity.util.GetUsernameToken;
 import com.bezkoder.spring.login.models.User;
 import com.bezkoder.spring.login.repository.UserRepository;
@@ -29,6 +30,7 @@ import com.bezkoder.spring.login.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -185,13 +187,26 @@ public class DataProduksiBerasController {
         return service.findAll();
     }
 
+    @GetMapping("/contoh")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PK')")
+    public Iterable<DataProduksiBeras> findAllCOntoh(){
+        return repo.findAll(DPBSpesification.containsNested("alan"));
+    }
+
     @PostMapping("/search/{size}/{page}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('PK')")
     public Iterable<DataProduksiBeras> findAllbyJenisBeras(@RequestBody SearchData searchData , @PathVariable("size") int size,
     @PathVariable("page") int page
     ){
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id"));
         return service.findByJenisBerasName(searchData.getNama(), pageable);
+    }
+
+    @PostMapping("/searchUser")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PK')")
+    public Iterable<User> findAllUser(@RequestBody SearchData searchData 
+    ){
+        return userRepository.findAll(DPBSpesification.containsTextInName(searchData.getNama()));
     }
 
     @GetMapping("/petani")

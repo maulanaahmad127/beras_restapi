@@ -56,5 +56,9 @@ public class DataProduksiBerasService {
         return berasRepo.findAll(DPBSpesification.containsNested(nama), pageable);
     }
 
+    public Iterable<DataProduksiBeras> findByIsTerjual(String nama, Pageable pageable){
+        return berasRepo.findAll(DPBSpesification.containsNestedIsTerjualTrue(nama), pageable);
+    }
+
 }
 

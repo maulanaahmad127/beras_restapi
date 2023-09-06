@@ -42,12 +42,25 @@ public class DPBSpesification {
                 return criteriaBuilder.or(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
-        // return (root, query, builder) -> {
-        //     List<CriteriaBuilder> builders = new ArrayList<>();
+    }
 
-        //     Path<JenisBeras> u = root.get("jenisBeras");
-        //     return builder.like(u.get("nama"), finalText);
-        // };
+    public static Specification<DataProduksiBeras> containsNestedIsTerjualTrue(String text) {
+        return new Specification<DataProduksiBeras>() {
+            @Override
+            public Predicate toPredicate(Root<DataProduksiBeras> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                // final List<Predicate> predicates = new ArrayList<>();
+                Path<JenisBeras> u = root.get("jenisBeras");
+                // predicates.add(criteriaBuilder.equal(root.get("isTerjual"), true));
+                // predicates.add(criteriaBuilder.like(u.get("nama"), "%"+text+"%"));
+                Path<User> p = root.get("petani");
+                // predicates.add(criteriaBuilder.like(p.get("nama"), "%"+text+"%"));
+                Predicate[] predicates = new Predicate[3];
+                predicates[0] = criteriaBuilder.equal(root.get("isTerjual"), false);
+                predicates[1] = criteriaBuilder.like(u.get("nama"), "%"+text+"%");
+                predicates[2] = criteriaBuilder.like(p.get("nama"), "%"+text+"%");
+                return criteriaBuilder.and(predicates[0] ,criteriaBuilder.or(predicates[1], predicates[2]));
+            }
+        };
     }
     
     public static Specification<User> containsTextInName(String text) {

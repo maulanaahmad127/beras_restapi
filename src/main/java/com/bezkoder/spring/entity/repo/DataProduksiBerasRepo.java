@@ -25,6 +25,11 @@ public interface DataProduksiBerasRepo extends PagingAndSortingRepository<DataPr
     @Query(
     value = "select sum(dpb.berat_beras) as stok, dpb.jenis_beras_id as jenisBerasID, jb.nama as jenisBeras from sppb_mdataproduksiberas dpb join sppb_mjenisberas jb on (dpb.jenis_beras_id = jb.id) where dpb.is_terjual = 0 GROUP BY dpb.jenis_beras_id"
     ,nativeQuery = true)
+    Page<DataBeras> sumStokBeras(Pageable pageable);
+
+    @Query(
+    value = "select sum(dpb.berat_beras) as stok, dpb.jenis_beras_id as jenisBerasID, jb.nama as jenisBeras from sppb_mdataproduksiberas dpb join sppb_mjenisberas jb on (dpb.jenis_beras_id = jb.id) where dpb.is_terjual = 0 GROUP BY dpb.jenis_beras_id"
+    ,nativeQuery = true)
     List<DataBeras> sumStokBeras();
 
     @Query(
@@ -42,6 +47,7 @@ public interface DataProduksiBerasRepo extends PagingAndSortingRepository<DataPr
    boolean existsById(Long id);
 
    Page<DataProduksiBeras> findAll(Specification<DataProduksiBeras> spec, Pageable pageable);
+
 
    Iterable<DataProduksiBeras> findAll(Specification<DataProduksiBeras> spec);
 }

@@ -202,12 +202,20 @@ public class DataProduksiBerasController {
         return service.findByJenisBerasName(searchData.getNama(), pageable);
     }
 
+    @PostMapping("/getDataTerjual/{size}/{page}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PK')")
+    public Iterable<DataProduksiBeras> findTerjual(@RequestBody SearchData searchData , @PathVariable("size") int size, @PathVariable("page") int page){
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id"));
+        return service.findByIsTerjual(searchData.getNama(), pageable);
+    }
+
     @PostMapping("/searchUser")
     @PreAuthorize("hasRole('ADMIN') or hasRole('PK')")
     public Iterable<User> findAllUser(@RequestBody SearchData searchData 
     ){
         return userRepository.findAll(DPBSpesification.containsTextInName(searchData.getNama()));
     }
+
 
     @GetMapping("/petani")
     @PreAuthorize("hasRole('PETANI')")
@@ -217,10 +225,11 @@ public class DataProduksiBerasController {
         return service.findByPetani(petani);
     }
 
-    @GetMapping("/getDataBeras")
+    @GetMapping("/getDataBeras/{size}/{page}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('PK')")
-    public List<DataBeras> findAllDataBeras(){
-        return repo.sumStokBeras();
+    public Iterable<DataBeras> findAllDataBeras(@PathVariable("size") int size, @PathVariable("page") int page){
+        Pageable pageable = PageRequest.of(page, size);
+        return repo.sumStokBeras(pageable);
     }
 
     @GetMapping("/getDataPenjualanBeras")

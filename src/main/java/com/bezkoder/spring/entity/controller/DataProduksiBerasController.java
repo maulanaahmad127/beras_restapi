@@ -3,7 +3,6 @@ package com.bezkoder.spring.entity.controller;
 
 
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -232,10 +231,11 @@ public class DataProduksiBerasController {
         return repo.sumStokBeras(pageable);
     }
 
-    @GetMapping("/getDataPenjualanBeras")
+    @GetMapping("/getDataPenjualanBeras/{size}/{page}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('PK')")
-    public List<DataPenjualanBeras> findAllDataPenjualanBeras(){
-        return repo.dataPenjualanBeras();
+    public Iterable<DataPenjualanBeras> findAllDataPenjualanBeras(@PathVariable("size") int size, @PathVariable("page") int page){
+        Pageable pageable = PageRequest.of(page, size);
+        return repo.dataPenjualanBeras(pageable);
     }
 
     @GetMapping("/getPetani")

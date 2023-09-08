@@ -1,6 +1,8 @@
 package com.bezkoder.spring.login.controllers;
 
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +58,7 @@ public class UpdateDataUserController {
 
     @PatchMapping("/changeEmail")
     @PreAuthorize("hasRole('ADMIN') or hasRole('PK') or hasRole('PETANI')")
-    public ResponseEntity<?> changeEmailBro(@RequestBody ChangeEmailData changeEmailData, Errors errors){
+    public ResponseEntity<?> changeEmailBro( @RequestBody ChangeEmailData changeEmailData, Errors errors){
         ResponseData<User> responseData = new ResponseData<>();
         if(errors.hasErrors()){
             for (ObjectError error : errors.getAllErrors()) {
@@ -69,9 +71,16 @@ public class UpdateDataUserController {
         
         String userString = getUsername.getUsernameStringFromToken();
         User user = userRepository.findByUsername(userString).get();
+       
+        
         if(changeEmailData.getEmail().isEmpty()){
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is empty!"));
         }
+
+        
+
+        
+
         if (userRepository.existsByEmail(changeEmailData.getEmail())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
           }
@@ -114,7 +123,7 @@ public class UpdateDataUserController {
 
     @PatchMapping("/changePassword")
     @PreAuthorize("hasRole('ADMIN') or hasRole('PK') or hasRole('PETANI')")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordData changePasswordData, Errors errors){
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordData changePasswordData, Errors errors){
         ResponseData<User> responseData = new ResponseData<>();
         if(errors.hasErrors()){
             for (ObjectError error : errors.getAllErrors()) {
@@ -133,6 +142,20 @@ public class UpdateDataUserController {
             boolean isAuthenticated = authenticationManager
             .authenticate(new UsernamePasswordAuthenticationToken(userString, changePasswordData.getPasswordLama())).isAuthenticated();
             
+            if(changePasswordData.getPasswordLama().isEmpty()){
+                return ResponseEntity.badRequest().body(new MessageResponse("Error: Password Lama is empty!"));
+            }
+
+            if(changePasswordData.getPasswordBaru().isEmpty()){
+                return ResponseEntity.badRequest().body(new MessageResponse("Error: Password Baru is empty!"));
+            }
+            
+            if(changePasswordData.getPasswordLama().equals(changePasswordData.getPasswordBaru())){
+                responseData.getMessage().add("password lama dan password baru sama");
+                responseData.setStatus(false);
+                responseData.setPayload(null);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+            }
             
             if(isAuthenticated == true){
                 System.out.println(isAuthenticated);

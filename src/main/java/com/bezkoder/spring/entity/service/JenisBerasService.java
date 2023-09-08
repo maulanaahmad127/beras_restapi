@@ -8,6 +8,7 @@ import com.bezkoder.spring.entity.model.JenisBeras;
 import com.bezkoder.spring.entity.repo.JenisBerasRepo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,7 +34,9 @@ public class JenisBerasService {
         return jenisBerasRepo.findAll();
     }
 
-
+    public Iterable<JenisBeras> findByNameContains(String nama, Pageable pageable){
+        return jenisBerasRepo.findByNamaContains(nama, pageable);
+    }
 
     public void removeOne(Long id){
         jenisBerasRepo.deleteById(id);

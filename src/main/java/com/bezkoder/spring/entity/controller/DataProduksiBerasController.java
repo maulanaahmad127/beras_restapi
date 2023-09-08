@@ -208,12 +208,7 @@ public class DataProduksiBerasController {
         return service.findByIsTerjual(searchData.getNama(), pageable);
     }
 
-    @PostMapping("/searchUser")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('PK')")
-    public Iterable<User> findAllUser(@RequestBody SearchData searchData 
-    ){
-        return userRepository.findAll(DPBSpesification.containsTextInName(searchData.getNama()));
-    }
+
 
 
     @GetMapping("/petani")

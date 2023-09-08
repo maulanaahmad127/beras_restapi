@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import com.bezkoder.spring.entity.dto.JenisBerasData;
 import com.bezkoder.spring.entity.dto.ResponseData;
+import com.bezkoder.spring.entity.dto.SearchData;
 import com.bezkoder.spring.entity.model.JenisBeras;
 import com.bezkoder.spring.entity.repo.JenisBerasRepo;
 import com.bezkoder.spring.entity.service.JenisBerasService;
@@ -14,6 +15,9 @@ import com.bezkoder.spring.login.models.User;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -96,6 +100,14 @@ public class JenisBerasController {
         return service.findAll();
     }
 
+    @PostMapping("/search/{size}/{page}")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PK')")
+    public Iterable<JenisBeras> findAllbyNameContains(@RequestBody SearchData searchData , @PathVariable("size") int size,
+    @PathVariable("page") int page
+    ){
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id"));
+        return service.findByNameContains(searchData.getNama(), pageable);
+    }
 
 
     @PutMapping("/{id}")

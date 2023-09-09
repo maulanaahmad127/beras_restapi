@@ -32,6 +32,19 @@ public class DPBSpesification {
         };
     }
 
+    public static Specification<DataProduksiBeras> containsNestedPetani(String text ,User petani) {
+        return new Specification<DataProduksiBeras>() {
+            @Override
+            public Predicate toPredicate(Root<DataProduksiBeras> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                final List<Predicate> predicates = new ArrayList<>();
+                Path<JenisBeras> u = root.get("jenisBeras");
+                predicates.add(criteriaBuilder.like(u.get("nama"), "%"+text+"%"));
+                predicates.add(criteriaBuilder.equal(root.get("petani"), petani));
+                return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+    }
+
     public static Specification<DataProduksiBeras> containsNestedIsTerjualTrue(String text) {
         return new Specification<DataProduksiBeras>() {
             @Override

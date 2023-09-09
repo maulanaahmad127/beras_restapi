@@ -211,12 +211,12 @@ public class DataProduksiBerasController {
 
 
 
-    @GetMapping("/petani")
+    @PostMapping("/petani/{size}/{page}")
     @PreAuthorize("hasRole('PETANI')")
-    public Iterable<DataProduksiBeras> findByPetani(){
+    public Iterable<DataProduksiBeras> findByPetani(@RequestBody SearchData searchData , @PathVariable("size") int size, @PathVariable("page") int page){
         User petani = userRepository.findByUsername(getUsername.getUsernameStringFromToken()).get();
-        System.out.println(petani.getUsername());
-        return service.findByPetani(petani);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id"));
+        return service.findByPetani(searchData.getNama() , petani, pageable);
     }
 
     @GetMapping("/getDataBeras/{size}/{page}")

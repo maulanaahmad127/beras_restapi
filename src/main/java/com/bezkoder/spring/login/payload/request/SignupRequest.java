@@ -5,18 +5,21 @@ import java.util.Set;
 import javax.validation.constraints.*;
  
 public class SignupRequest {
-    @NotBlank
+
     @Size(min = 3, max = 20)
     private String username;
 
+    @NotBlank
     private String nama;
 
+    @NotBlank
     private String jenis_kelamin;
 
+    @NotBlank
     private String no_handphone;
 
  
-    @NotBlank
+
     @Size(max = 50)
     @Email
     private String email;

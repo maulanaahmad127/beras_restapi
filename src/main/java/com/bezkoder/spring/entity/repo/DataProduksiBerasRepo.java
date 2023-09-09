@@ -44,7 +44,7 @@ public interface DataProduksiBerasRepo extends PagingAndSortingRepository<DataPr
         )
     List<DataPenjualanBeras> dataPenjualanBeras();
 
-    Iterable<DataProduksiBeras> findByPetani(User petani);
+    Page<DataProduksiBeras> findByPetani(User petani, Pageable pageable );
 
    @Modifying
    @Query("update DataProduksiBeras dpb set dpb.isTerjual = :status where dpb.id = :id")

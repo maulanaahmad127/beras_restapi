@@ -38,8 +38,8 @@ public class DataProduksiBerasService {
         return berasRepo.findAll();
     }
 
-    public Iterable<DataProduksiBeras> findByPetani(User petani){
-        return berasRepo.findByPetani(petani);
+    public Iterable<DataProduksiBeras> findByPetani(String name, User petani, Pageable pageable){
+        return berasRepo.findAll(DPBSpesification.containsNestedPetani(name, petani), pageable);
     }
 
 

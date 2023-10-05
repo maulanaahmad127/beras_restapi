@@ -24,14 +24,15 @@ public class SignupRequest {
     @Email
     private String email;
     
-    
+    @NotNull
     private Set<String> role;
     
     @NotBlank
     @Size(min = 6, max = 40)
     private String password;
 
-    
+    @NotBlank
+    private String passwordConfirmation;
     
   
     public String getUsername() {
@@ -90,8 +91,16 @@ public class SignupRequest {
         this.no_handphone = no_handphone;
     }
 
+    public String getPasswordConfirmation() {
+        return passwordConfirmation;
+    }
+
+    public void setPasswordConfirmation(String passwordConfirmation) {
+        this.passwordConfirmation = passwordConfirmation;
+    }
 
 
+    
     
     
 }

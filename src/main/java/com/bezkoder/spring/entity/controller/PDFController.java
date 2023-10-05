@@ -11,8 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
+
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.bezkoder.spring.entity.model.DataBeras;
 import com.bezkoder.spring.entity.model.DataPenjualanBeras;
@@ -24,7 +25,7 @@ import com.bezkoder.spring.entity.util.DataPenjualanBerasPDFExporter;
 import com.bezkoder.spring.entity.util.UserPDFExporter;
 import com.lowagie.text.DocumentException;
 
-@Controller
+@RestController
 public class PDFController {
 
     @Autowired

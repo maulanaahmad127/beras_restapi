@@ -54,6 +54,9 @@ public class User {
 
   private String jenis_kelamin;
 
+  @Column(columnDefinition="BOOLEAN DEFAULT false")
+  private boolean isEmailActivated;
+
 
   public User() {
   }

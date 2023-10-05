@@ -1,5 +1,6 @@
 package com.bezkoder.spring.login.controllers;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,6 +17,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,7 +57,17 @@ public class AuthController {
   JwtUtils jwtUtils;
 
   @PostMapping("/signin")
-  public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+  public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, BindingResult bindingResult) {
+
+    if (bindingResult.hasErrors()) {
+      List<FieldError> errors = bindingResult.getFieldErrors();
+      List<String> message = new ArrayList<>();
+      for (FieldError e : errors){
+          message.add("@" + e.getField().toUpperCase() + ":" + e.getDefaultMessage());
+          return ResponseEntity.badRequest().body(new MessageResponse(message.toString()));
+      }
+      
+  }
 
     Authentication authentication = authenticationManager
         .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -80,7 +93,21 @@ public class AuthController {
   }
 
   @PostMapping("/signup")
-  public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+  public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest, BindingResult bindingResult)  {
+
+    if (bindingResult.hasErrors()) {
+      List<FieldError> errors = bindingResult.getFieldErrors();
+      List<String> message = new ArrayList<>();
+      for (FieldError e : errors){
+          message.add("@" + e.getField().toUpperCase() + ":" + e.getDefaultMessage());
+          return ResponseEntity.badRequest().body(new MessageResponse(message.toString()));
+      }
+      
+  }
+
+    if (signUpRequest.getUsername().isEmpty()) {
+      return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is empty!"));
+    }
     
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
       return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
@@ -88,6 +115,10 @@ public class AuthController {
 
     if (userRepository.existsByEmail(signUpRequest.getEmail())) {
       return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
+    }
+
+    if(!signUpRequest.getPassword().equals(signUpRequest.getPasswordConfirmation())){
+      return ResponseEntity.badRequest().body(new MessageResponse("Error: Retype password is not same!"));
     }
 
     
@@ -111,9 +142,7 @@ public class AuthController {
 
      
       strRoles.forEach(role -> {
-        if(role.isEmpty()){
-          throw new RuntimeException("Error: Role is empty.");
-        }
+
         switch (role) {
         case "pk":
           Role pkRole = roleRepository.findByName(ERole.ROLE_PK)

@@ -15,6 +15,8 @@ import com.bezkoder.spring.login.models.User;
 public interface UserRepository extends JpaRepository<User, Long> {
   Optional<User> findByUsername(String username);
 
+  Optional<User> findByEmail(String email);
+
   @Query(
   value = "SELECT *  from user_roles ur join sppb_muser u on (ur.user_id = u.id) join roles r on (r.id = ur.role_id) where r.name ='ROLE_PETANI'",
   nativeQuery = true)

@@ -13,7 +13,7 @@ public class ChangePasswordData {
     @Size(min = 6, max = 40)
     private String passwordBaru;
 
-    @NotBlank
+    
     private String passwordBaruConfirmation;
     
 }

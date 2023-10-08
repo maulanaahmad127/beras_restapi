@@ -98,11 +98,11 @@ public class UpdateDataUserController {
         User user = userRepository.findByUsername(userString).get();
 
         if (changeEmailData.getEmail().isEmpty()) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is empty!"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email kosong!"));
         }
 
         if (userRepository.existsByEmail(changeEmailData.getEmail())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email telah digunakan!"));
         }
         user.setEmail(changeEmailData.getEmail());
         user.setEmailActivated(false);
@@ -156,10 +156,10 @@ public class UpdateDataUserController {
         String userString = getUsername.getUsernameStringFromToken();
         User user = userRepository.findByUsername(userString).get();
         if (changeUsernameData.getUsername().isEmpty()) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is empty!"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username kosong!"));
         }
         if (userRepository.existsByUsername(changeUsernameData.getUsername())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username telah digunakan!"));
         }
         user.setUsername(changeUsernameData.getUsername());
 
@@ -191,11 +191,15 @@ public class UpdateDataUserController {
                     .isAuthenticated();
 
             if (changePasswordData.getPasswordLama().isEmpty()) {
-                return ResponseEntity.badRequest().body(new MessageResponse("Error: Password Lama is empty!"));
+                return ResponseEntity.badRequest().body(new MessageResponse("Error: Password Lama kosong!"));
             }
 
             if (changePasswordData.getPasswordBaru().isEmpty()) {
-                return ResponseEntity.badRequest().body(new MessageResponse("Error: Password Baru is empty!"));
+                return ResponseEntity.badRequest().body(new MessageResponse("Error: Password Baru kosong!"));
+            }
+
+            if (changePasswordData.getPasswordBaruConfirmation().isEmpty()) {
+                return ResponseEntity.badRequest().body(new MessageResponse("Error: Konfirmasi Password Baru kosong!"));
             }
 
             if (changePasswordData.getPasswordLama().equals(changePasswordData.getPasswordBaru())) {
@@ -207,7 +211,7 @@ public class UpdateDataUserController {
 
             if (!changePasswordData.getPasswordBaru().equals(changePasswordData.getPasswordBaruConfirmation())) {
                 return ResponseEntity.badRequest()
-                        .body(new MessageResponse("Error: Retype password baru is not same!"));
+                        .body(new MessageResponse("Error: konfirmasi password baru salah!"));
             }
 
             if (isAuthenticated == true) {
@@ -217,7 +221,7 @@ public class UpdateDataUserController {
             }
 
         } catch (Exception e) {
-            responseData.getMessage().add("password lama salah");
+            responseData.getMessage().add(e.getLocalizedMessage());
             responseData.setStatus(false);
             responseData.setPayload(null);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);

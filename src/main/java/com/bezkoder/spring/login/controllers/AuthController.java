@@ -106,19 +106,19 @@ public class AuthController {
   }
 
     if (signUpRequest.getUsername().isEmpty()) {
-      return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is empty!"));
+      return ResponseEntity.badRequest().body(new MessageResponse("Error: Username kosong!"));
     }
     
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-      return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+      return ResponseEntity.badRequest().body(new MessageResponse("Error: Username telah digunakan!"));
     }
 
     if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-      return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
+      return ResponseEntity.badRequest().body(new MessageResponse("Error: Email telah digunakan!"));
     }
 
     if(!signUpRequest.getPassword().equals(signUpRequest.getPasswordConfirmation())){
-      return ResponseEntity.badRequest().body(new MessageResponse("Error: Retype password is not same!"));
+      return ResponseEntity.badRequest().body(new MessageResponse("Error: konfirmasi password salah!"));
     }
 
     

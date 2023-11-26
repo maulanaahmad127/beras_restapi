@@ -42,11 +42,5 @@ public class JenisBerasService {
         jenisBerasRepo.deleteById(id);
     }
 
-    
-    
-
-    
-
-
 }
 

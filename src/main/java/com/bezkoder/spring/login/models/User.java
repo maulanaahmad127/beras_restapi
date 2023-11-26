@@ -35,7 +35,6 @@ public class User {
 
   private String no_handphone;
 
-
   @NotBlank
   @Size(max = 50)
   @Email
@@ -69,12 +68,4 @@ public class User {
     this.email = email;
     this.password = password;
   }
-
-  
-
-  
-
-
-  
-  
 }

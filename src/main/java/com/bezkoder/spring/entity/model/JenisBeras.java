@@ -18,19 +18,13 @@ public class JenisBeras {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
     private String nama;
-
-    
 
     public JenisBeras() {
     }
 
-
-
     public JenisBeras(String nama) {
         this.nama = nama;
     }
-    
     
 }

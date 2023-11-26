@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.bezkoder.spring.login.models.ConfirmationToken;
 
 @Repository
-public interface ConfirmationTokenRepository extends CrudRepository<ConfirmationToken, String> {
+public interface ConfirmationTokenRepository extends CrudRepository<ConfirmationToken, Long> {
     ConfirmationToken findByConfirmationToken(String confirmationToken);
 }

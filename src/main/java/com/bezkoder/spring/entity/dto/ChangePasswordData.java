@@ -1,6 +1,5 @@
 package com.bezkoder.spring.entity.dto;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import lombok.Getter;

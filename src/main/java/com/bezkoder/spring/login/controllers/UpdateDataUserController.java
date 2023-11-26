@@ -73,7 +73,7 @@ public class UpdateDataUserController {
 
     @PatchMapping("/changeEmail")
     @PreAuthorize("hasRole('ADMIN') or hasRole('PK') or hasRole('PETANI')")
-    public ResponseEntity<?> changeEmailBro(@Valid @RequestBody ChangeEmailData changeEmailData, Errors errors,
+    public ResponseEntity<?> changeEmail(@Valid @RequestBody ChangeEmailData changeEmailData, Errors errors,
             BindingResult bindingResult) {
         ResponseData<User> responseData = new ResponseData<>();
         if (errors.hasErrors()) {

@@ -2,6 +2,8 @@ package com.bezkoder.spring.entity.util;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
  
 import javax.servlet.http.HttpServletResponse;
@@ -58,6 +60,22 @@ public class DataPenjualanBerasPDFExporter {
     public void export(HttpServletResponse response) throws DocumentException, IOException {
         Document document = new Document(PageSize.A4);
         PdfWriter.getInstance(document, response.getOutputStream());
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+
+        Font fontHeader = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+        
+        final HeaderFooter header = new HeaderFooter(new Phrase("SPPB", fontHeader), false);
+        header.setAlignment(Element.ALIGN_LEFT);
+        header.setBorder(Rectangle.BOTTOM);
+        
+        final HeaderFooter footer = new HeaderFooter(new Phrase("Last Updated at: " + dtf.format(now) ,fontHeader), false);
+        footer.setAlignment(Element.ALIGN_RIGHT);
+        footer.setBorder(Rectangle.TOP);
+
+        document.setHeader(header);
+        document.setFooter(footer);
          
         document.open();
         Font font = FontFactory.getFont(FontFactory.HELVETICA_BOLD);

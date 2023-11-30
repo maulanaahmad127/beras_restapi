@@ -83,6 +83,14 @@ public class DataProduksiBerasController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
 
+        User user = getUsername.getUserNameFromToken();
+        if(user.isEmailActivated() == false){
+            responseData.getMessage().add("email belum teraktivasi, silahkan aktivasi email terlebih dahulu");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseData);
+        }
+
         Float beratFloat = berasData.getBerat_beras();
         
         if(beratFloat == 0 || beratFloat == null){
@@ -181,7 +189,7 @@ public class DataProduksiBerasController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN') or hasRole('PK')")
+    @PreAuthorize("(hasRole('ADMIN') or hasRole('PK'))")
     public Iterable<DataProduksiBeras> findAll(){
         return service.findAll();
     }
@@ -260,6 +268,14 @@ public class DataProduksiBerasController {
             responseData.setStatus(false);
             responseData.setPayload(null);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
+        }
+
+        User user = getUsername.getUserNameFromToken();
+        if(user.isEmailActivated() == false){
+            responseData.getMessage().add("email belum teraktivasi, silahkan aktivasi email terlebih dahulu");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseData);
         }
         
         DataProduksiBeras beras = service.findOne(id);
@@ -355,6 +371,13 @@ public class DataProduksiBerasController {
             responseData.setPayload(null);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
+        User user = getUsername.getUserNameFromToken();
+        if(user.isEmailActivated() == false){
+            responseData.getMessage().add("email belum teraktivasi, silahkan aktivasi email terlebih dahulu");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseData);
+        }
         
         DataProduksiBeras beras = service.findOne(id);
         fields.forEach((key, value) -> {
@@ -388,6 +411,14 @@ public class DataProduksiBerasController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseData<DataProduksiBeras>> delete(@PathVariable("id") Long id){
         ResponseData<DataProduksiBeras> responseData = new ResponseData<>();
+
+        User user = getUsername.getUserNameFromToken();
+        if(user.isEmailActivated() == false){
+            responseData.getMessage().add("email belum teraktivasi, silahkan aktivasi email terlebih dahulu");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseData);
+        }
         
         if(!repo.existsById(id)){
             responseData.getMessage().add("data produksi beras is not found!");
@@ -395,6 +426,8 @@ public class DataProduksiBerasController {
             responseData.setPayload(null);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
+
+
 
         service.removeOne(id);
         responseData.setStatus(true);
@@ -407,6 +440,15 @@ public class DataProduksiBerasController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseData<DataProduksiBeras>> updateStatusIsTerjual(@PathVariable("id") Long id){
         ResponseData<DataProduksiBeras> responseData = new ResponseData<>();
+
+        User user = getUsername.getUserNameFromToken();
+        if(user.isEmailActivated() == false){
+            responseData.getMessage().add("email belum teraktivasi, silahkan aktivasi email terlebih dahulu");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseData);
+        }
+        
         if(!repo.existsById(id)){
             responseData.getMessage().add("data produksi beras is not found!");
             responseData.setStatus(false);

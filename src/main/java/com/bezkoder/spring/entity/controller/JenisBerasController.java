@@ -57,6 +57,15 @@ public class JenisBerasController {
             responseData.setPayload(null);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
         }
+
+        User user = getUsername.getUserNameFromToken();
+        if(user.isEmailActivated() == false){
+            responseData.getMessage().add("email belum teraktivasi, silahkan aktivasi email terlebih dahulu");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseData);
+        }
+        
         if(jenisBerasData.getNama() == null){
             responseData.getMessage().add("nama jenis beras is empty!");
             responseData.setStatus(false);
@@ -114,6 +123,13 @@ public class JenisBerasController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseData<JenisBeras>> update(@PathVariable("id") Long id, @Valid @RequestBody JenisBerasData berasData, Errors errors){
         ResponseData<JenisBeras> responseData = new ResponseData<>();
+        User user = getUsername.getUserNameFromToken();
+        if(user.isEmailActivated() == false){
+            responseData.getMessage().add("email belum teraktivasi, silahkan aktivasi email terlebih dahulu");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseData);
+        }
         if(!jenisBerasRepo.existsById(id)){
             responseData.getMessage().add("jenis beras is not found!");
             responseData.setStatus(false);
@@ -139,6 +155,13 @@ public class JenisBerasController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ResponseData<JenisBeras>> delete(@PathVariable("id") Long id){
         ResponseData<JenisBeras> responseData = new ResponseData<>();
+        User user = getUsername.getUserNameFromToken();
+        if(user.isEmailActivated() == false){
+            responseData.getMessage().add("email belum teraktivasi, silahkan aktivasi email terlebih dahulu");
+            responseData.setStatus(false);
+            responseData.setPayload(null);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseData);
+        }
         if(!jenisBerasRepo.existsById(id)){
             responseData.getMessage().add("jenis beras is not found!");
             responseData.setStatus(false);

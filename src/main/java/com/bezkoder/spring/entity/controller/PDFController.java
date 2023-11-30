@@ -22,7 +22,9 @@ import com.bezkoder.spring.entity.repo.DataProduksiBerasRepo;
 import com.bezkoder.spring.entity.service.DataProduksiBerasService;
 import com.bezkoder.spring.entity.util.DataBerasPDFExporter;
 import com.bezkoder.spring.entity.util.DataPenjualanBerasPDFExporter;
+import com.bezkoder.spring.entity.util.GetUsernameToken;
 import com.bezkoder.spring.entity.util.UserPDFExporter;
+import com.bezkoder.spring.login.models.User;
 import com.lowagie.text.DocumentException;
 
 @RestController
@@ -33,10 +35,19 @@ public class PDFController {
 
     @Autowired
     private DataProduksiBerasRepo repo;
+
+    @Autowired
+    private GetUsernameToken getUsername;
     
     @GetMapping("/api/listBeras/export/pdf")
     @PreAuthorize("hasRole('ADMIN') or hasRole('PK')")
     public void exportListBerasToPDF(HttpServletResponse response) throws DocumentException, IOException {
+
+        User user = getUsername.getUserNameFromToken();
+        if(user.isEmailActivated() == false){
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        }
         response.setContentType("application/pdf");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
         String currentDateTime = dateFormatter.format(new Date());
@@ -61,6 +72,11 @@ public class PDFController {
     @GetMapping("/api/listDataBeras/export/pdf")
     @PreAuthorize("hasRole('ADMIN') or hasRole('PK')")
     public void exportlistDataBerasToPDF(HttpServletResponse response) throws DocumentException, IOException {
+        User user = getUsername.getUserNameFromToken();
+        if(user.isEmailActivated() == false){
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        }
         response.setContentType("application/pdf");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
         String currentDateTime = dateFormatter.format(new Date());
@@ -80,6 +96,11 @@ public class PDFController {
     @GetMapping("/api/listDataPenjualanBeras/export/pdf")
     @PreAuthorize("hasRole('ADMIN') or hasRole('PK')")
     public void exportlistDataPenjualanBerasToPDF(HttpServletResponse response) throws DocumentException, IOException {
+        User user = getUsername.getUserNameFromToken();
+        if(user.isEmailActivated() == false){
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        }
         response.setContentType("application/pdf");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
         String currentDateTime = dateFormatter.format(new Date());

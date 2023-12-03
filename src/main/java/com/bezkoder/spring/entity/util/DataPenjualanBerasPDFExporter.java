@@ -39,6 +39,9 @@ public class DataPenjualanBerasPDFExporter {
         cell.setPhrase(new Phrase("Total Berat", font));
         table.addCell(cell);
 
+        cell.setPhrase(new Phrase("Total Harga", font));
+        table.addCell(cell);
+
         cell.setPhrase(new Phrase("Bulan", font));
         table.addCell(cell);
 
@@ -52,6 +55,7 @@ public class DataPenjualanBerasPDFExporter {
             table.addCell(beras.getJenisBeras());
             table.addCell(String.valueOf(beras.getBerasTerjual()));
             table.addCell(String.valueOf(beras.getTotalBerat()));
+            table.addCell(String.valueOf(beras.getTotalHarga()));
             table.addCell(String.valueOf(beras.getBulan()));
             table.addCell(String.valueOf(beras.getTahun()));
         }
@@ -87,9 +91,9 @@ public class DataPenjualanBerasPDFExporter {
          
         document.add(p);
          
-        PdfPTable table = new PdfPTable(5);
+        PdfPTable table = new PdfPTable(6);
         table.setWidthPercentage(100f);
-        table.setWidths(new float[] {2.5f, 1.5f, 1.5f, 1.5f, 1.5f});
+        table.setWidths(new float[] {2.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f});
         table.setSpacingBefore(10);
          
         writeTableHeader(table);

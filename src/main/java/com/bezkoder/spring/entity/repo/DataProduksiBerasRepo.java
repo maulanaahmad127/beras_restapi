@@ -33,13 +33,13 @@ public interface DataProduksiBerasRepo extends PagingAndSortingRepository<DataPr
     List<DataBeras> sumStokBeras();
 
     @Query(
-        value = "select count(dpb.is_terjual) as berasTerjual, dpb.jenis_beras_id as jenisBerasID, jb.nama as jenisBeras, sum(dpb.berat_beras) as totalBerat, EXTRACT(MONTH FROM pjb.tanggal_terjual) as bulan, EXTRACT(Year FROM pjb.tanggal_terjual) as tahun  from sppb_mdataproduksiberas dpb join penjualan_beras pjb on (dpb.penjualan_beras_id = pjb.id) join sppb_mjenisberas jb on (dpb.jenis_beras_id = jb.id)  where dpb.is_terjual = 1 GROUP BY dpb.jenis_beras_id, bulan, tahun ORDER BY bulan asc, tahun asc",
+        value = "select count(dpb.is_terjual) as berasTerjual, dpb.jenis_beras_id as jenisBerasID, jb.nama as jenisBeras, sum(dpb.berat_beras) as totalBerat,  sum(dpb.harga) as totalHarga, EXTRACT(MONTH FROM pjb.tanggal_terjual) as bulan, EXTRACT(Year FROM pjb.tanggal_terjual) as tahun  from sppb_mdataproduksiberas dpb join penjualan_beras pjb on (dpb.penjualan_beras_id = pjb.id) join sppb_mjenisberas jb on (dpb.jenis_beras_id = jb.id)  where dpb.is_terjual = 1 GROUP BY dpb.jenis_beras_id, bulan, tahun ORDER BY bulan asc, tahun asc",
         nativeQuery = true
         )
     Page<DataPenjualanBeras> dataPenjualanBeras(Pageable pageable);
 
     @Query(
-        value = "select count(dpb.is_terjual) as berasTerjual, dpb.jenis_beras_id as jenisBerasID, jb.nama as jenisBeras, sum(dpb.berat_beras) as totalBerat, EXTRACT(MONTH FROM pjb.tanggal_terjual) as bulan, EXTRACT(Year FROM pjb.tanggal_terjual) as tahun  from sppb_mdataproduksiberas dpb join penjualan_beras pjb on (dpb.penjualan_beras_id = pjb.id) join sppb_mjenisberas jb on (dpb.jenis_beras_id = jb.id)  where dpb.is_terjual = 1 GROUP BY dpb.jenis_beras_id, bulan, tahun ORDER BY bulan asc, tahun asc",
+        value = "select count(dpb.is_terjual) as berasTerjual, dpb.jenis_beras_id as jenisBerasID, jb.nama as jenisBeras, sum(dpb.berat_beras) as totalBerat,  sum(dpb.harga) as totalHarga, EXTRACT(MONTH FROM pjb.tanggal_terjual) as bulan, EXTRACT(Year FROM pjb.tanggal_terjual) as tahun  from sppb_mdataproduksiberas dpb join penjualan_beras pjb on (dpb.penjualan_beras_id = pjb.id) join sppb_mjenisberas jb on (dpb.jenis_beras_id = jb.id)  where dpb.is_terjual = 1 GROUP BY dpb.jenis_beras_id, bulan, tahun ORDER BY bulan asc, tahun asc",
         nativeQuery = true
         )
     List<DataPenjualanBeras> dataPenjualanBeras();

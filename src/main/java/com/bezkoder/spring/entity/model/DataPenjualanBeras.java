@@ -5,6 +5,7 @@ public interface DataPenjualanBeras {
     public Long getJenisBerasID();
     public String getJenisBeras();
     public Integer getTotalBerat();
+    public Integer getTotalHarga();
     public Integer getBulan();
     public Integer getTahun();
 }

@@ -66,7 +66,7 @@ public class JenisBerasController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseData);
         }
         
-        if(jenisBerasData.getNama() == null){
+        if(jenisBerasData.getNama() == null || jenisBerasData.getNama() == ""){
             responseData.getMessage().add("nama jenis beras is empty!");
             responseData.setStatus(false);
             responseData.setPayload(null);
